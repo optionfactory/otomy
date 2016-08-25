@@ -7,7 +7,7 @@ import net.optionfactory.otomy.converters.MappingContext;
 
 public interface CollectionFactory {
 
-    public Optional<Collection<?>> collection(MappingContext ctx);
+    public Optional<Collection<?>> collection(MappingContext ctx, int initialSize);
 
-    public Optional<Map<?, ?>> map(MappingContext ctx);
+    public Optional<Map<?, ?>> map(MappingContext ctx, int initialSize);
 }

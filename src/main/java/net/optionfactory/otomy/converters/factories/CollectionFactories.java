@@ -14,9 +14,9 @@ public class CollectionFactories implements CollectionFactory {
     }
 
     @Override
-    public Optional<Collection<?>> collection(MappingContext ctx) {
+    public Optional<Collection<?>> collection(MappingContext ctx, int initialSize) {
         for (CollectionFactory factory : factories) {
-            final Optional<Collection<?>> candidate = factory.collection(ctx);
+            final Optional<Collection<?>> candidate = factory.collection(ctx, initialSize);
             if (candidate.isPresent()) {
                 return candidate;
             }
@@ -25,9 +25,9 @@ public class CollectionFactories implements CollectionFactory {
     }
 
     @Override
-    public Optional<Map<?, ?>> map(MappingContext ctx) {
+    public Optional<Map<?, ?>> map(MappingContext ctx, int initialSize) {
         for (CollectionFactory factory : factories) {
-            final Optional<Map<?, ?>> candidate = factory.map(ctx);
+            final Optional<Map<?, ?>> candidate = factory.map(ctx, initialSize);
             if (candidate.isPresent()) {
                 return candidate;
             }

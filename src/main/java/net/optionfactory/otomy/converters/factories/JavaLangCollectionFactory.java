@@ -22,28 +22,28 @@ import net.optionfactory.otomy.converters.MappingContext;
 public class JavaLangCollectionFactory implements CollectionFactory {
 
     @Override
-    public Optional<Collection<?>> collection(MappingContext context) {
+    public Optional<Collection<?>> collection(MappingContext context, int initialSize) {
         final Class<?> targetType = context.target.type.resolve();
         if (targetType == List.class || targetType == ArrayList.class) {
-            return Optional.of(new ArrayList<>());
+            return Optional.of(initialSize == -1 ? new ArrayList<>() : new ArrayList<>(initialSize));
         }
-        if (LinkedList.class.isAssignableFrom(targetType)) {
+        if (targetType.isAssignableFrom(LinkedList.class)) {
             //Queue, Dequeue, LinkedList
             return Optional.of(new LinkedList<>());
         }
         if (targetType == Set.class || targetType == HashSet.class) {
-            return Optional.of(new HashSet<>());
+            return Optional.of(initialSize == -1 ? new HashSet<>() : new HashSet<>(initialSize));
         }
         //TODO: TreeSet and all sortable collections handling comparators
         return Optional.empty();
     }
 
     @Override
-    public Optional<Map<?, ?>> map(MappingContext context) {
+    public Optional<Map<?, ?>> map(MappingContext context, int initialSize) {
         final Class<?> targetType = context.target.type.resolve();
 
         if(targetType == Map.class || targetType == ConcurrentMap.class){
-            return Optional.of(new ConcurrentHashMap<>());            
+            return Optional.of(initialSize == -1 ? new ConcurrentHashMap<>(): new ConcurrentHashMap<>(initialSize));            
         }
         if (targetType == EnumMap.class) {
             final Class<?> enumType = context.target.type.getGeneric(0).resolve();
@@ -53,23 +53,23 @@ public class JavaLangCollectionFactory implements CollectionFactory {
             return Optional.of(new Properties());
         }
         if (targetType == LinkedHashMap.class) {
-            return Optional.of(new LinkedHashMap<>());
+            return Optional.of(initialSize == -1 ? new LinkedHashMap<>(): new LinkedHashMap<>(initialSize));
         }
         if (targetType == IdentityHashMap.class) {
-            return Optional.of(new HashMap<>());
+            return Optional.of(initialSize == -1 ? new IdentityHashMap<>() : new IdentityHashMap<>(initialSize));
         }
         if (targetType == WeakHashMap.class) {
             return Optional.of(new WeakHashMap<>());
         }
 
         if (targetType == HashMap.class) {
-            return Optional.of(new HashMap<>());
+            return Optional.of(initialSize == -1 ? new HashMap<>() : new HashMap<>(initialSize));
         }
         if (targetType == Hashtable.class) {
-            return Optional.of(new Hashtable<>());
+            return Optional.of(initialSize == -1 ? new Hashtable<>(): new Hashtable<>(initialSize));
         }
         //TODO: SortedMaps (ConcurrentSkipListMap and TreeMap handling comparators)
-        return Optional.of(new ConcurrentHashMap<>());
+        return Optional.of(initialSize == -1 ?new ConcurrentHashMap<>() : new ConcurrentHashMap<>(initialSize));
     }
 
 }
