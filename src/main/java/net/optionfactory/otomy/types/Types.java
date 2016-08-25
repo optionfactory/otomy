@@ -1,5 +1,6 @@
 package net.optionfactory.otomy.types;
 
+import java.lang.ref.Reference;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.Inet4Address;
@@ -11,6 +12,7 @@ import java.util.IdentityHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class Types {
 
@@ -79,6 +81,18 @@ public abstract class Types {
                 || t == String.class
                 || t == BigInteger.class
                 || t == BigDecimal.class;
+    }
+
+    public static boolean isReferenceType(Class<?> t) {
+        return Reference.class.isAssignableFrom(t) || t == AtomicReference.class;
+    }
+
+    public static Object referenceValue(Class<?> t, Object source) {
+        if (AtomicReference.class == t) {
+            return ((AtomicReference) source).get();
+        }
+        return ((Reference) source).get();
+
     }
 
 }
