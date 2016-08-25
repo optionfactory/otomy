@@ -1,5 +1,7 @@
 package net.optionfactory.otomy.converters;
 
+import java.util.function.Function;
+
 public class Conversion<T> {
 
     private static final Conversion<?> NO = new Conversion<>(null, false);
@@ -22,6 +24,13 @@ public class Conversion<T> {
 
     public static <T> Conversion<T> of(T value) {
         return new Conversion<>(value, true);
+    }
+
+    public <R> Conversion<R> map(Function<T, R> fn) {
+        if (!valid) {
+            return (Conversion<R>) this;
+        }
+        return Conversion.of(fn.apply(value));
     }
 
 }
