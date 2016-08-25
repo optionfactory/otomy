@@ -13,6 +13,7 @@ import net.optionfactory.otomy.types.Typed;
 public class Dates implements Converter {
 
     private static final Typed DATE_TYPE = Typed.class_(Date.class);
+    private static final Typed SQL_DATE_TYPE = Typed.class_(java.sql.Date.class);
 
     @Override
     public Conversion<?> convert(MappingContext ctx, Object source) {
@@ -25,14 +26,18 @@ public class Dates implements Converter {
         }
 
         //long to dates
-        if ((sourceClass == Long.class || sourceClass == long.class) && DATE_TYPE.isAssignableFrom(ctx.target.type)) {
-            if (source == null) {
-                return Conversion.nil();
-            }
+        if ((sourceClass == Long.class || sourceClass == long.class) && ctx.target.type.isAssignableFrom(SQL_DATE_TYPE)) {
             if (ctx.target.type.resolve() == java.util.Date.class) {
                 return Conversion.of(new java.util.Date((Long) source));
             }
             return Conversion.of(new java.sql.Date((Long) source));
+        }
+        // date to date
+        if (DATE_TYPE.isAssignableFrom(ctx.source.type) && ctx.target.type.isAssignableFrom(SQL_DATE_TYPE)) {
+            if (ctx.target.type.resolve() == Date.class) {
+                return Conversion.of(new Date(((Date)source).getTime()));
+            }
+            return Conversion.of(new java.sql.Date(((Date)source).getTime()));
         }
         return Conversion.no();
     }
