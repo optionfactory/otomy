@@ -22,10 +22,11 @@ public class Immutables implements Converter {
     @Override
     public Conversion<?> convert(MappingContext ctx, Object source) {
         final Class<?> t = ctx.target.type.resolve();
-        if (!t.isPrimitive() && !Types.isBoxedNumeric(t) && !t.isEnum() && !immutables.contains(ctx.target.type)) {
+        if (!Types.isImmutableFromJavaLang(t) && !immutables.contains(ctx.target.type)) {
             return Conversion.no();
         }
         return ctx.target.type.isAssignableFrom(ctx.source.type) ? Conversion.of(source) : Conversion.no();
     }
+
 
 }

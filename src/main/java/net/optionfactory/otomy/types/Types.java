@@ -2,8 +2,15 @@ package net.optionfactory.otomy.types;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.Inet4Address;
+import java.net.Inet6Address;
+import java.net.InetSocketAddress;
+import java.net.URI;
+import java.net.URL;
 import java.util.IdentityHashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 public abstract class Types {
 
@@ -24,6 +31,22 @@ public abstract class Types {
             UNBOXED_TO_BOXED.put(entry.getValue(), entry.getKey());
         }
 
+    }
+
+    public static boolean isImmutableFromJavaLang(Class<?> t) {
+        return t.isPrimitive()
+                || isBoxedNumeric(t)
+                || t == String.class
+                || t == BigInteger.class
+                || t == BigDecimal.class
+                || t == Locale.class
+                || t == UUID.class
+                || t == URI.class
+                || t == URL.class
+                || t == Inet4Address.class
+                || t == Inet6Address.class
+                || t == InetSocketAddress.class
+                || t.isEnum();
     }
 
     public static boolean isAssignable(Class<?> lhsType, Class<?> rhsType) {
