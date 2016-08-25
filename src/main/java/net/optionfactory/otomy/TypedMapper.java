@@ -1,9 +1,11 @@
 package net.optionfactory.otomy;
 
 import net.optionfactory.otomy.converters.Context;
+import net.optionfactory.otomy.converters.Conversion;
 import net.optionfactory.otomy.converters.Converter;
 import net.optionfactory.otomy.converters.Inspector;
 import net.optionfactory.otomy.converters.MappingContext;
+import net.optionfactory.otomy.converters.MappingException;
 import net.optionfactory.otomy.types.Typed;
 
 public class TypedMapper implements Mapper {
@@ -27,7 +29,11 @@ public class TypedMapper implements Mapper {
         final Context srcCtx = new Context(sourceType, tracing);
         final Context dstCtx = new Context(targetType, tracing);
         final MappingContext ctx = new MappingContext(srcCtx, dstCtx, inspector, converter);
-        return (R) converter.convert(ctx, source).value;
+        final Conversion<?> conversion = converter.convert(ctx, source);
+        if (!conversion.valid) {
+            throw new MappingException(ctx, "no suitable converter found");
+        }
+        return (R) conversion.value;
     }
 
 }
