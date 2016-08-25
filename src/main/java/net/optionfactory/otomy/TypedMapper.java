@@ -9,7 +9,7 @@ import net.optionfactory.otomy.types.Typed;
 public class TypedMapper implements Mapper {
 
     public enum Tracing {
-        Enabled, Disabled
+        Disabled, Enabled
     }
 
     private final Converter converter;
