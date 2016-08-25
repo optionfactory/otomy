@@ -6,7 +6,7 @@
     <name>${project.groupId}:${project.artifactId}</name>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <description>A typed object to object mapper handling generics</description>
+    <description>An object to object mapper with generics type resolution</description>
     <url>https://github.com/optionfactory/otomy</url>
     <licenses>
         <license>
