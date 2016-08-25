@@ -47,33 +47,39 @@ public class Strategies implements Converter {
         return new Strategies(Arrays.asList(converters));
     }
 
-    public static Strategies defaults(Set<Typed> customImmutables, Collection<CollectionFactory> customCollectionFactories, Collection<Converter> customConverters) {
+    public static Strategies defaults(Set<Typed> customImmutables, Collection<CollectionFactory> customCollectionFactories, Collection<Converter> customNullConverters, Collection<Converter> customConverters) {
         final List<CollectionFactory> factories = new ArrayList<>();
         factories.addAll(customCollectionFactories);
         factories.add(new JavaLangCollectionFactory());
 
-        final List<Converter> builtin = Arrays.<Converter>asList(new Nulls(),
+        final List<Converter> builtin = Arrays.<Converter>asList(
+                new NullsToBoxed(),
+                new Nulls(),
                 new Immutables(customImmutables),
                 new Optionals(),
                 new Iterables(new CollectionFactories(factories)),
                 new Dates(),
-                new Numbers()
+                new Numbers(),
+                new References()
         );
-        final List<Converter> generic = Arrays.<Converter>asList(new Nulls(),
+
+        final List<Converter> generic = Arrays.<Converter>asList(
+                new Unboxing(),
+                new Boxing(),
                 new Strings(),
                 new Beans()
         );
 
         final Stream<Converter> cs = Stream.concat(
-                Stream.concat(builtin.stream(), customConverters.stream()),
-                generic.stream()
-        );
+                Stream.concat(
+                        Stream.concat(customNullConverters.stream(), builtin.stream()),
+                        customConverters.stream()), generic.stream());
         return new Strategies(cs.collect(Collectors.toList()));
 
     }
 
     public static Strategies defaults() {
-        return defaults(Collections.emptySet(), Collections.emptyList(), Collections.emptyList());
+        return defaults(Collections.emptySet(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
     }
 
 }

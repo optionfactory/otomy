@@ -12,6 +12,10 @@ import java.util.IdentityHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicIntegerArray;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicLongArray;
 import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class Types {
@@ -93,6 +97,14 @@ public abstract class Types {
         }
         return ((Reference) source).get();
 
+    }
+    
+    public static boolean isBoxType(Class<?> t){
+        return Types.isReferenceType(t) 
+                || t == AtomicInteger.class
+                || t == AtomicLong.class
+                || t == AtomicIntegerArray.class
+                || t == AtomicLongArray.class;
     }
 
 }
