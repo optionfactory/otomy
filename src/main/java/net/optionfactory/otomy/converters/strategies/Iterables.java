@@ -100,7 +100,7 @@ public class Iterables implements Converter {
             if (!maybeCollection.isPresent()) {
                 return Conversion.no();
             }
-            final Collection<Object> collection = maybeCollection.get();
+            final Collection<Object> targetCollection = maybeCollection.get();
             final Typed sourceElementType = ctx.source.type.getComponentType();
             final Typed targetElementType = ctx.target.type.getGeneric(0);
             for (int i = 0; i != len; ++i) {
@@ -109,8 +109,9 @@ public class Iterables implements Converter {
                 if (!el.valid) {
                     return Conversion.no();
                 }
-                collection.add(el.value);
+                targetCollection.add(el.value);
             }
+            return Conversion.of(targetCollection);
         }
         if (sourceClass.isArray() && targetClass.isArray()) {
             // array to array
@@ -126,7 +127,7 @@ public class Iterables implements Converter {
                 }
                 Array.set(targetArray, i, el);
             }
-
+            return Conversion.of(targetArray);
         }
         return Conversion.no();
     }
